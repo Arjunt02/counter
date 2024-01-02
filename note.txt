@@ -1,0 +1,130 @@
+ install redux toolkit
+ 
+ 1. create a file--- store.js
+
+   create a configureStore and assign a variable (store)
+   ----------------------------------------------------
+   
+       store contain state and reducer
+
+                  reducer----state value update
+      
+
+       import { configureStore } from "@reduxjs/toolkit";
+
+       export const store=configureStore({
+         reducer:{}
+        })
+
+ 2. root component selector is wraping with provider tag
+
+  index.js
+  ---------
+    <Provider>
+       <App />
+    </Provider>
+
+3. store passing through the provider tag in another variable
+
+       <Provider store={store}>
+           <App />
+       </Provider>
+
+
+4. create a file-----counterslice.js   
+
+          set initial value of state and assign a varable (initialState)
+          ---------------------------------------------------------------
+
+        const initialState={value:0}
+        // state name --- value
+        // initial value-----0
+
+
+        create a slice and assign a variable (counterSlice)
+        ----------------------------------------------------
+
+        createSlice() is a pre-defined method, it must contain
+             
+             1) initial state
+             2) an object full of reducer functions
+             3) slice name 
+
+
+
+
+            export const counterSlice=createSlice({
+                name:'counter',
+                initialState,
+                reducers:{
+
+                    // actions
+                    increment:(state)=>{
+                        state.value+=1
+                    },
+                    decrement:(state)=>{
+                        state.value-=1
+                    },
+                    reset:(state)=>{
+                        state.value=0
+                    }
+                }
+            })
+
+
+            export const{increment,decrement,reset}=counterSlice.actions
+
+            export default counterSlice.reducer
+
+
+
+5)  store.js
+
+        The reducer argument is passed to createReducer() 
+
+
+
+      import { configureStore } from "@reduxjs/toolkit";
+      import counterslice from "./counterslice";
+
+
+         export const store=configureStore({
+            reducer:{
+
+         counterReducer:counterslice
+
+           }
+          })
+
+
+6) counter.js
+
+
+
+          function Counter() {
+
+            const count=useSelector((state)=>state.counterReducer.value)
+
+            const dispatch=useDispatch()
+
+            return (
+              <>
+
+                <div style={{width:'100%',height:'100vh'}} className='d-flex justify-content-center align-items-center'>
+                  <div style={{width:'500px'}} className="border rounded shadow p-5 text-center m-auto">
+                      <h1 style={{fontSize:'80px'}} className='text-info'>{count}</h1>
+                      <div>
+                          <button onClick={()=>dispatch(increment())} className='btn btn-primary'>Increment</button>
+                          <button onClick={()=>dispatch(reset())} className='btn btn-danger ms-5'>Reset</button>
+                          <button onClick={()=>dispatch(decrement())} className='btn btn-warning ms-5'>Decrement</button>
+                      </div>
+
+                  </div>
+
+                </div>
+
+              </>
+            )
+          }
+
+           
